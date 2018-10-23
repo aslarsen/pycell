@@ -8,58 +8,58 @@ from sys import exit
 class pycell:
     def __init__(self):
 
-	# pymol object
-	self._obj = None
+        # pymol object
+        self._obj = None
 
-	# pymol cell name
-	self._name = None
+        # pymol cell name
+        self._name = None
 
         # cell parameters 
         self._a = None
-	self._b = None
-	self._c = None
-	self._alpha = None
-	self._beta = None
-	self._gamma = None
+        self._b = None
+        self._c = None
+        self._alpha = None
+        self._beta = None
+        self._gamma = None
 
-	# cell alignment
-	self._cell_alignment = "GMX"
+        # cell alignment
+        self._cell_alignment = "GMX"
 
-	# unit cell vectors
+        # unit cell vectors
         self._A = None
-	self._B = None
-	self._C = None
+        self._B = None
+        self._C = None
 
         # symmetry list for trajectories
         self._symmetrylist = []
 
     def find_cell(self):
-	if self._obj != None:
+        if self._obj != None:
             cell_param = cmd.get_symmetry(self._obj) 
             self._a = cell_param[0]
-	    self._b = cell_param[1]
-	    self._c = cell_param[2]
-	    self._alpha = cell_param[3]
-	    self._beta = cell_param[4]
-	    self._gamma = cell_param[5]
+            self._b = cell_param[1]
+            self._c = cell_param[2]
+            self._alpha = cell_param[3]
+            self._beta = cell_param[4]
+            self._gamma = cell_param[5]
 
     def set_cell(self, a, b, c, alpha, beta, gamma):
         self._a = a
-	self._b = b
-	self._c = c
-	self._alpha = alpha
-	self._beta = beta
-	self._gamma = gamma
-	
-	# init cell vectors with new parameters
-	self.init_cell()
+        self._b = b
+        self._c = c
+        self._alpha = alpha
+        self._beta = beta
+        self._gamma = gamma
+        
+        # init cell vectors with new parameters
+        self.init_cell()
 
     def draw_trajectory(self, filepath, radius=0.1, color_type = 'white', name = "cell"): 
 
         self._name = name
-	self.read_trajctorysymmetry(filepath)
-	N = 1
-	for sym in self._symmetrylist:
+        self.read_trajctorysymmetry(filepath)
+        N = 1
+        for sym in self._symmetrylist:
             self.set_cell(sym[0],sym[1],sym[2],sym[3],sym[4],sym[5])
             self.draw(radius, color_type, N)
             N += 1
@@ -69,15 +69,15 @@ class pycell:
         with open(filepath) as infile:
             for line in infile:
                 if len(line)>0:
-		    line = line.split()
-		    #print line
-		    if line[0] == 'CRYST1':
-		        a = float(line[1])
-		        b = float(line[2])
-		        c = float(line[3])
-		        alpha = float(line[4])
-		        beta = float(line[5])
-		        gamma = float(line[6])
+                    line = line.split()
+                    #print line
+                    if line[0] == 'CRYST1':
+                        a = float(line[1])
+                        b = float(line[2])
+                        c = float(line[3])
+                        alpha = float(line[4])
+                        beta = float(line[5])
+                        gamma = float(line[6])
                         self._symmetrylist.append([a,b,c,alpha,beta,gamma])
 
     def get_unit_cell_vectors_MS6(self, collinear_vector_length, plane_vector_length, free_vector_length, alpha, beta, gamma):
@@ -134,8 +134,8 @@ class pycell:
     def init_cell(self):
 
         if (self._a == None):
-	    print "cell parameters not set"
-	    exit()
+            print "cell parameters not set"
+            exit()
 
         if self._cell_alignment == "MS6":  
             # material_studio 6, C along Z, B in YZ plane
@@ -144,11 +144,11 @@ class pycell:
             # Gromacs, A along X, B in YX plane
             self._A, self._B, self._C = self.get_unit_cell_vectors_GMX(self._a, self._b,self._c, self._alpha, self._beta, self._gamma)
         else:
-	    print "ERROR in cell alignment"
-	    exit()
+            print "ERROR in cell alignment"
+            exit()
 
     def draw(self, radius=0.1, color_type = 'white', state = 1):
-	
+
         size = radius*15.
         origin_offset = radius * -25.
       
@@ -203,9 +203,9 @@ class pycell:
 
     def get_colorlist(self, color_type):
 
-	color_list = [],[],[],[],[],[],[],[],[],[],[],[]
+        color_list = [],[],[],[],[],[],[],[],[],[],[],[]
 
-	if color_type == 'white':
+        if color_type == 'white':
             for i in range(0, len(color_list)):
                 color_list[i].append([1,1,1])
                 color_list[i].append([1,1,1])
@@ -322,8 +322,8 @@ def pycell_auto(obj=None, radius = 0.1, color_type = 'white', name= "cell"):
     use as 
         load test.pdb
         pycell_auto test
-	or
-	pycell_auto test, 0.05, black, cell
+        or
+        pycell_auto test, 0.05, black, cell
 
     """
     newcell._obj = obj
